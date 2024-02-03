@@ -23,17 +23,24 @@ const unixTimesampRE = /^\d{13}$/g
   if( !isNaN( new Date(dateParam) ) ){
     console.log(`This date is valid: ${dateParam}`);
     const newDate = new Date(dateParam);
-    res.json({ unix: Math.floor(newDate.getTime() ), utc:newDate })
+    console.log(newDate.toUTCString());
+    res.json({ unix: Math.floor(newDate.getTime() ), utc: newDate.toUTCString() })
   }else if(dateParam.match(unixTimesampRE)){
     console.log(`Unix timestamp detected: ${dateParam}`);
-    const newDate = new Date(dateParam * 1000);
-    res.json({unix: dateParam, utc: newDate});
+    const newDate = new Date(parseInt(dateParam));
+    console.log(newDate.toUTCString());
+    res.json({unix: parseInt(dateParam), utc: newDate.toUTCString()});
   }else{
     console.log(`Invalid date detected: ${dateParam}`);
     res.json({error:'Invalid Date'});
   }
 });
 
+app.get("/api/", function (req, res) {
+  const newDate = new Date();
+  const timeStamp = newDate.getTime();
+  res.json({unix: timeStamp, utc: newDate.toUTCString()});
+});
 // your first API endpoint... 
 app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
